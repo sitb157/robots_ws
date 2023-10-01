@@ -14,12 +14,22 @@ RUN apt-get install -y \
     vim
 
 # Install rmf
-RUN apt-get update && sudo apt install -y \
+RUN apt-get update && apt-get install -y \
     python3-pip \
     curl \
     python3-colcon-mixin \
     ros-dev-tools
+ 
+# install gazebo garden
+RUN apt-get update &&  apt-get install -y \
+    lsb-release \
+    wget \
+    gnupg
 
-WORKDIR /root/simulator_ws/
+RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+RUN apt-get update && apt-get install -y gz-garden
+
+WORKDIR /root/robots_ws/
 
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
