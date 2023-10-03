@@ -11,7 +11,8 @@ USER root
 ARG ROS_DISTRO=humble
 RUN apt-get update 
 RUN apt-get install -y \
-    vim
+    vim \ 
+    git
 
 # Install rmf
 RUN apt-get update && apt-get install -y \
@@ -26,6 +27,13 @@ RUN apt-get update &&  apt-get install -y \
     wget \
     gnupg
 
+COPY ./src /root/robots_ws/src
+WORKDIR /root/robots_ws/src
+RUN git clone --depth 1 -b humble https://github.com/gazebosim/ros_gz.git 
+WORKDIR /root/robots_ws
+ENV GZ_VERSION=garden
+RUN rosdep install -r --from-paths src -i -y --rosdistro humble
+
 RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
 RUN apt-get update && apt-get install -y gz-garden
@@ -34,8 +42,8 @@ RUN apt-get install -y \
     ros-${ROS_DISTRO}-ros-gz-sim
 
 RUN apt-get install -y \
-    ros-${ROS_DISTRO}-rviz2
+    ros-${ROS_DISTRO}-rviz2 \
+    ros-${ROS_DISTRO}-rqt* 
 
-WORKDIR /root/robots_ws/
 
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
