@@ -196,6 +196,27 @@
         <child>lidar_link</child>
       </joint>
 
+      <!-- Define the IMU link -->
+      <link name="imu_link">
+      <!-- IMU link properties go here -->
+        <!-- Define the IMU sensor -->
+        <sensor name="imu_sensor" type="imu">
+          <always_on>1</always_on>
+	  <update_rate>100</update_rate>
+	  <visualize>true</visualize>
+	  <topic>/diff_drive/imu</topic>
+          <enable_metrics>true</enable_metrics>
+          <parent>imu_link</parent> <!-- Attach the sensor to the IMU link -->
+        </sensor>
+      </link>
+
+      <!-- Define the IMU joint -->
+      <joint name="imu_joint" type="fixed">
+        <parent>chassis</parent> <!-- Replace with the parent link name -->
+	<child>imu_link</child>
+        <pose>0 0 0 0 0 0</pose>
+      </joint>
+
       <joint name='left_wheel_joint' type='revolute'>
         <parent>chassis</parent>
         <child>left_wheel</child>
