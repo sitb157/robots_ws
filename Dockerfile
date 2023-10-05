@@ -27,9 +27,13 @@ RUN apt-get update &&  apt-get install -y \
     wget \
     gnupg
 
+RUN apt-get update && apt-get install -y \
+    ros-${ROS_DISTRO}-rviz2 \
+    ros-${ROS_DISTRO}-rqt* 
+
 COPY ./src /root/robots_ws/src
 WORKDIR /root/robots_ws/src
-RUN git clone --depth 1 -b humble https://github.com/gazebosim/ros_gz.git 
+#RUN git clone --depth 1 -b humble https://github.com/gazebosim/ros_gz.git 
 WORKDIR /root/robots_ws
 ENV GZ_VERSION=garden
 RUN rosdep install -r --from-paths src -i -y --rosdistro humble
@@ -40,10 +44,6 @@ RUN apt-get update && apt-get install -y gz-garden
 RUN apt-get install -y \
     ros-${ROS_DISTRO}-ros-gz-bridge \
     ros-${ROS_DISTRO}-ros-gz-sim
-
-RUN apt-get install -y \
-    ros-${ROS_DISTRO}-rviz2 \
-    ros-${ROS_DISTRO}-rqt* 
 
 
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
