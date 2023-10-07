@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <sdf version="1.8">
     <model name='diff_drive'>
-      <link name='chassis'>
-        <pose>-0.151427 -0 0.175 0 -0 0</pose>
+      <link name='base_link'>
+        <pose>0.0 -0 0.175 0 -0 0</pose>
         <inertial>
           <mass>1.14395</mass>
           <inertia>
@@ -14,10 +14,10 @@
             <izz>0.481014</izz>
           </inertia>
         </inertial>
-        <visual name='visual_chassis'>
+        <visual name='visual_base_link'>
           <geometry>
             <box>
-              <size>2.01142 1 0.568726</size>
+              <size>0.5 0.5 0.568726</size>
             </box>
           </geometry>
           <material>
@@ -26,17 +26,17 @@
             <specular>0.0 0.0 1.0 1</specular>
           </material>
         </visual>
-        <collision name='collision_chassis'>
+        <collision name='collision_base_link'>
           <geometry>
             <box>
-              <size>2.01142 1 0.568726</size>
+              <size>0.5 0.5 0.568726</size>
             </box>
           </geometry>
         </collision>
       </link>
 
       <link name='left_wheel'>
-        <pose>0.554283 0.625029 -0.025 -1.5707 0 0</pose>
+        <pose>0.0 0.25 -0.125 -1.5707 0 0</pose>
         <inertial>
           <mass>2</mass>
           <inertia>
@@ -51,7 +51,7 @@
         <visual name='visual_left_wheel'>
           <geometry>
             <sphere>
-              <radius>0.3</radius>
+              <radius>0.1</radius>
             </sphere>
           </geometry>
           <material>
@@ -63,14 +63,14 @@
         <collision name='collision_left_wheel'>
           <geometry>
             <sphere>
-              <radius>0.3</radius>
+              <radius>0.1</radius>
             </sphere>
           </geometry>
         </collision>
       </link>
 
       <link name='right_wheel'>
-        <pose>0.554282 -0.625029 -0.025 -1.5707 0 0</pose>
+        <pose>0.0 -0.25 -0.125 -1.5707 0 0</pose>
         <inertial>
           <mass>2</mass>
           <inertia>
@@ -85,7 +85,7 @@
         <visual name='visual_right_wheel'>
           <geometry>
             <sphere>
-              <radius>0.3</radius>
+              <radius>0.1</radius>
             </sphere>
           </geometry>
           <material>
@@ -97,14 +97,14 @@
         <collision name='collision_right_wheel'>
           <geometry>
             <sphere>
-              <radius>0.3</radius>
+              <radius>0.1</radius>
             </sphere>
           </geometry>
         </collision>
       </link>
 
-      <link name='caster'>
-        <pose>-0.957138 -0 -0.125 0 -0 0</pose>
+      <link name='caster_0'>
+        <pose>0.25 0 -0.125 0 -0 0</pose>
         <inertial>
           <mass>1</mass>
           <inertia>
@@ -119,7 +119,7 @@
         <visual name='visual_caster'>
           <geometry>
             <sphere>
-              <radius>0.2</radius>
+              <radius>0.1</radius>
             </sphere>
           </geometry>
           <material>
@@ -131,7 +131,41 @@
         <collision name='collision_caster'>
           <geometry>
             <sphere>
-              <radius>0.2</radius>
+              <radius>0.1</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+
+      <link name='caster_1'>
+        <pose>-0.25 -0 -0.125 0 -0 0</pose>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.1</iyy>
+            <iyz>0</iyz>
+            <izz>0.1</izz>
+          </inertia>
+        </inertial>
+        <visual name='visual_caster'>
+          <geometry>
+            <sphere>
+              <radius>0.1</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.2 0.2 0.2 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+          </material>
+        </visual>
+        <collision name='collision_caster'>
+          <geometry>
+            <sphere>
+              <radius>0.1</radius>
             </sphere>
           </geometry>
         </collision>
@@ -163,7 +197,7 @@
         </visual>
         <sensor name='gpu_lidar' type='gpu_lidar'>
           <pose>0 0 0 0 0 0</pose>
-          <topic>scan</topic>
+          <topic>model/diff_drive/scan</topic>
           <ignition_frame_id>diff_drive/lidar_link</ignition_frame_id>
           <update_rate>10</update_rate>
           <lidar>
@@ -192,7 +226,7 @@
       </link>
 
       <joint name='lidar_joint' type='fixed'>
-        <parent>chassis</parent>
+        <parent>base_link</parent>
         <child>lidar_link</child>
       </joint>
 
@@ -202,9 +236,9 @@
         <!-- Define the IMU sensor -->
         <sensor name="imu_sensor" type="imu">
           <always_on>1</always_on>
-	  <update_rate>100</update_rate>
-	  <visualize>true</visualize>
-	  <topic>/diff_drive/imu</topic>
+	      <update_rate>100</update_rate>
+	      <visualize>true</visualize>
+	      <topic>model/diff_drive/imu</topic>
           <enable_metrics>true</enable_metrics>
           <parent>imu_link</parent> <!-- Attach the sensor to the IMU link -->
         </sensor>
@@ -212,13 +246,13 @@
 
       <!-- Define the IMU joint -->
       <joint name="imu_joint" type="fixed">
-        <parent>chassis</parent> <!-- Replace with the parent link name -->
+        <parent>base_link</parent> <!-- Replace with the parent link name -->
 	<child>imu_link</child>
         <pose>0 0 0 0 0 0</pose>
       </joint>
 
       <joint name='left_wheel_joint' type='revolute'>
-        <parent>chassis</parent>
+        <parent>base_link</parent>
         <child>left_wheel</child>
         <axis>
           <xyz>0 0 1</xyz>
@@ -230,7 +264,7 @@
       </joint>
 
       <joint name='right_wheel_joint' type='revolute'>
-        <parent>chassis</parent>
+        <parent>base_link</parent>
         <child>right_wheel</child>
         <axis>
           <xyz>0 0 1</xyz>
@@ -241,9 +275,14 @@
         </axis>
       </joint>
 
-      <joint name='caster_wheel' type='ball'>
-        <parent>chassis</parent>
-        <child>caster</child>
+      <joint name='caster_0_wheel' type='ball'>
+        <parent>base_link</parent>
+        <child>caster_0</child>
+      </joint>
+
+      <joint name='caster_1_wheel' type='ball'>
+        <parent>base_link</parent>
+        <child>caster_1</child>
       </joint>
 
       <plugin

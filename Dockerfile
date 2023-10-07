@@ -47,3 +47,4 @@ RUN apt-get install -y \
 
 
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
+RUN echo "source /root/robots_ws/install/setup.bash" >> ~/.bashrc

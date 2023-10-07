@@ -61,6 +61,7 @@ def generate_launch_description():
     rviz = Node(
        package='rviz2',
        executable='rviz2',
+       arguments=['-d', os.path.join(pkg_gazebo_worlds, 'config', 'diff_drive.rviz')],
        condition=IfCondition(LaunchConfiguration('rviz'))
     )
 
@@ -80,6 +81,6 @@ def generate_launch_description():
         DeclareLaunchArgument('rviz', default_value='true',
                               description='Open RViz.'),
         #robot_state_publisher,
-        #bridge,
+        bridge,
         rviz
     ])
