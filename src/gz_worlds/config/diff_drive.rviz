@@ -8,7 +8,6 @@ Panels:
         - /LaserScan1
         - /TF1
         - /TF1/Frames1
-        - /TF1/Frames1/diff_drive/imu_link1
       Splitter Ratio: 0.5
     Tree Height: 548
   - Class: rviz_common/Selection
@@ -89,11 +88,7 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        diff_drive:
-          Value: true
-        diff_drive/caster:
-          Value: true
-        diff_drive/chassis:
+        diff_drive/base_link:
           Value: true
         diff_drive/imu_link:
           Value: true
@@ -112,11 +107,7 @@ Visualization Manager:
       Show Names: true
       Tree:
         diff_drive/odom:
-          diff_drive:
-            diff_drive/caster:
-              {}
-            diff_drive/chassis:
-              {}
+          diff_drive/base_link:
             diff_drive/imu_link:
               {}
             diff_drive/left_wheel:
@@ -130,7 +121,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: diff_drive
+    Fixed Frame: diff_drive/base_link
     Frame Rate: 30
   Name: root
   Tools:

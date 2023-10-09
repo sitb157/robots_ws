@@ -28,34 +28,34 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Configure ROS nodes for launch
+    use_sim_time = LaunchConfiguration('use_sim_time', default='True')
 
     # Setup project paths
     pkg_gazebo_worlds = get_package_share_directory('gz_worlds')
-
-    # Load the SDF file from "description" package
-    #sdf_model_file  =  os.path.join(pkg_gazebo_worlds, 'models', 'diff_drive.sdf')
-    #with open(sdf_model_file, 'r') as infp:
-    #    robot_desc = infp.read()
-
-
+    
     # Set up world sdf file
     sdf_world_file  =  os.path.join(pkg_gazebo_worlds, 'worlds', 'diff_drive.sdf')
 
     # Process gz sim
     gz_proc = ExecuteProcess(cmd=['gz', 'sim', sdf_world_file, '-v'], output='screen')
 
-    # Takes the description and joint angles as inputs and publishes the 3D poses of the robot links
-    #robot_state_publisher = Node(
-    #    package='robot_state_publisher',
-    #    executable='robot_state_publisher',
-    #    name='robot_state_publisher',
-    #    output='both',
-    #    parameters=[
-    #        {'use_sim_time': True},
-    #        {'robot_description': robot_desc},
-    #    ]
-    #)
+    # Load the SDF file from "description" package
+    sdf_model_file  =  os.path.join(pkg_gazebo_worlds, 'models', 'diff_drive','model.sdf')
+    with open(sdf_model_file, 'r') as infp:
+        robot_desc = infp.read()
 
+    # Takes the description and joint angles as inputs and publishes the 3D poses of the robot links
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='both',
+        parameters=[
+            {'use_sim_time': use_sim_time},
+            {'robot_description': robot_desc},
+            {'frame_prefix': 'diff_drive/'},
+        ]
+    )
 
     # Visualize in RViz
     rviz = Node(
@@ -76,11 +76,23 @@ def generate_launch_description():
         output='screen'
     )
 
+    robot_localization_node = Node(
+            package='robot_localization',
+            executable='ekf_node',
+            name='ekf_filter_node',
+            parameters=[
+                os.path.join(pkg_gazebo_worlds, 'params', 'ekf.yaml'), 
+                {'use_sim_time': use_sim_time}],
+            remappings=[('odometry/filtered', 'diff_drive/odometry/filtered')],
+            output='screen'
+    )
+
     return LaunchDescription([
         gz_proc,
         DeclareLaunchArgument('rviz', default_value='true',
                               description='Open RViz.'),
-        #robot_state_publisher,
+        robot_state_publisher,
+        robot_localization_node,
         bridge,
         rviz
     ])
