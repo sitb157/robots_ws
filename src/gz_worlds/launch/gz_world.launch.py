@@ -58,7 +58,7 @@ def generate_launch_description():
     )
 
     # Visualize in RViz
-    rviz = Node(
+    rviz2 = Node(
        package='rviz2',
        executable='rviz2',
        arguments=['-d', os.path.join(pkg_gazebo_worlds, 'config', 'diff_drive.rviz')],
@@ -81,18 +81,28 @@ def generate_launch_description():
             executable='ekf_node',
             name='ekf_filter_node',
             parameters=[
-                os.path.join(pkg_gazebo_worlds, 'params', 'ekf.yaml'), 
+                {os.path.join(pkg_gazebo_worlds, 'params', 'ekf.yaml')}, 
                 {'use_sim_time': use_sim_time}],
             remappings=[('odometry/filtered', 'diff_drive/odometry/filtered')],
             output='screen'
     )
+ 
+    declare_rviz_condition = DeclareLaunchArgument('rviz', default_value='true',
+        description='Open RViz.'
+    )
 
+    declare_use_sim_time = DeclareLaunchArgument(
+            'use_sim_time',
+            default_value='true',
+            description='Use simulation (Gazebo) clock if true'
+    )
+ 
     return LaunchDescription([
+        declare_rviz_condition,
+        declare_use_sim_time,
         gz_proc,
-        DeclareLaunchArgument('rviz', default_value='true',
-                              description='Open RViz.'),
         robot_state_publisher,
         robot_localization_node,
         bridge,
-        rviz
+        rviz2
     ])
