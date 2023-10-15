@@ -286,6 +286,43 @@
         <parent>base_link</parent>
       </joint>
 
+      <link name="navsat_link">
+        <pose>0 0.0 0.05 0 0 0</pose>
+        <inertial>
+          <mass>0.1</mass>
+          <inertia>
+            <ixx>0.000166667</ixx>
+            <iyy>0.000166667</iyy>
+            <izz>0.000166667</izz>
+          </inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </visual>
+        <sensor name='navsat' type='navsat'>
+          <topic>model/diff_drive/navsat</topic>
+          <gz_frame_id>diff_drive/navsat_link</gz_frame_id>
+          <update_rate>1</update_rate>
+          <always_on>1</always_on>
+        </sensor>
+      </link>
+
+      <joint name='navsat_joint' type='fixed'>
+        <child>navsat_link</child>
+        <parent>base_link</parent>
+      </joint>
+
       <plugin
         filename="gz-sim-diff-drive-system"
         name="gz::sim::systems::DiffDrive">
