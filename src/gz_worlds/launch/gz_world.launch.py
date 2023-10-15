@@ -34,7 +34,7 @@ def generate_launch_description():
     pkg_gazebo_worlds = get_package_share_directory('gz_worlds')
     
     # Set up world sdf file
-    sdf_world_file  =  os.path.join(pkg_gazebo_worlds, 'worlds', 'diff_drive.sdf')
+    sdf_world_file  =  os.path.join(pkg_gazebo_worlds, 'worlds', 'worlds.sdf')
 
     # Process gz sim
     gz_proc = ExecuteProcess(cmd=['gz', 'sim', sdf_world_file, '-v'], output='screen')
