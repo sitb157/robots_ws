@@ -19,10 +19,15 @@
   ros_type_name: "sensor_msgs/msg/Imu"
   gz_type_name: "gz.msgs.IMU"
   direction: GZ_TO_ROS
-- ros_topic_name: "/diff_drive/scan"
-  gz_topic_name: "/model/diff_drive/scan"
-  ros_type_name: "sensor_msgs/msg/LaserScan"
-  gz_type_name: "gz.msgs.LaserScan"
+  #- ros_topic_name: "/diff_drive/scan"
+  #  gz_topic_name: "/model/diff_drive/scan"
+  #  ros_type_name: "sensor_msgs/msg/LaserScan"
+  #  gz_type_name: "gz.msgs.LaserScan"
+  #  direction: GZ_TO_ROS
+- ros_topic_name: "/diff_drive/pointcloud"
+  gz_topic_name: "/model/diff_drive/lidar/points"
+  ros_type_name: "sensor_msgs/msg/PointCloud2"
+  gz_type_name: "gz.msgs.PointCloudPacked"
   direction: GZ_TO_ROS
 - ros_topic_name: "/clock"
   gz_topic_name: "/clock"
